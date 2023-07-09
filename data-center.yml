@@ -1,0 +1,90 @@
+name: Data center
+
+on:
+  workflow_dispatch:
+    inputs:
+      k8_version:
+        type: choice
+        description: "Select k8 Version"
+        required: true
+        default: v1.22.5
+        options:
+          - v1.24.3
+          - v1.24.2
+          - v1.24.1
+          - v1.23.9
+          - v1.23.8
+          - v1.23.7
+          - v1.23.6
+          - v1.23.5
+          - v1.22.9
+          - v1.22.9
+          - v1.22.8
+          - v1.22.7
+          - v1.22.6
+          - v1.22.5
+          - v1.21.9
+          - v1.21.8
+          - v1.21.7
+          - v1.21.6
+          - v1.21.5
+
+      owner:
+        type: string
+        description: "Owner Name"
+        required: true
+      Cluster_name: 
+        type: string
+        description: "cluster Name"
+        required: true
+      master_config: 
+        type: string 
+        description: "Master node configurations (CPU,RAM,STORAGE)"
+        default: '2,4,50'
+        required: false
+      worker_config:
+        type: string
+        description: "Worker node configurations (CPU,RAM,STORAGE,COUNT)"
+        default: '2,4,50,2'
+        required: false
+
+      datastore: 
+        type: choice
+        description: "Datastore"
+        required: true
+        default: datastore4
+        options:
+        - datastore1
+        - datastore2
+        - datastore3
+        - datastore4
+        - datastore5
+        - datastore6
+        - datastore7
+      datacenter:
+        type: choice
+        description: "Data center"
+        required: true
+        default: "datacenter-2"
+        options:
+          - "datacenter-1"
+          - "datacenter-2"
+          - "datacenter-3"
+jobs:
+  ProvisionKubernetesCluster:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create varibales.tfvars file
+      run: |
+        master_config="${{ inputs.master_config }}"
+        IFS="," read -a masterinputs <<< $master_config
+        echo "MASTER_CPU=${masterinputs[0]}"
+        echo "MASTER_RAM=$((1024 * ${masterinputs[1]}))"
+        echo "MASTER_STORAGE=${masterinputs[2]}"
+
+        worker_config="${{ inputs.worker_config }}"
+        IFS="," read -a workerinputs <<< $worker_config
+        echo "WORKER_CPU=${workerinputs[0]}"
+        echo "WORKER_RAM=$((1024 * ${workerinputs[1]}))"
+        echo "WORKER_STORAGE=${workerinputs[2]}"
+        echo "WORKER_COUNT=${workerinputs[3]}"

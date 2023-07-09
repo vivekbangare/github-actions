@@ -1,0 +1,72 @@
+name: Mixed inputs
+
+on:
+  workflow_dispatch:
+    inputs:
+      owner:
+        type: string
+        description: "k8s cluster owner name"
+        required: true 
+      k8_version:
+        type: choice
+        description: "Select k8 Version"
+        required: true
+        options:
+          - v1.22.5
+          - v1.21.5
+      cluster_name:
+        type: string
+        description: "k8s Cluster Name"
+        required: true   
+      master-cpu:
+        type: string
+        description: "Master CPU"
+        required: true
+        default: "2"
+      master-ram:
+        type: string
+        description: "Master Ram in MB"
+        required: true
+        default: "4096"
+      master-disksize:
+        type: string
+        description: "Master disksize in GB"
+        required: true
+        default: "50"
+      worker-cpu:
+        type: string
+        description: "Worker CPU"
+        required: true
+        default: "2"
+      worker-ram:
+        type: string
+        description: "Worker Ram in MB"
+        required: true
+        default: "4096"
+      worker-disksize:
+        type: string
+        description: "worker disksize in GB"
+        required: true
+        default: "50"
+
+jobs:
+  greet:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: K8 Cluster Details
+      run: |
+        echo owner = "${{ github.event.inputs.owner }}"
+        echo k8_version = "${{ github.event.inputs.k8_version }}"
+        echo cluster_name = "${{ github.event.inputs.cluster_name }}"
+        echo vm-network = "DeploymentNetwork"
+        echo master_vm_name = "master"
+        echo master-cpu = "${{ github.event.inputs.master-cpu }}"
+        echo master-cores-per-socket = "1"
+        echo master-ram = "${{ github.event.inputs.master-ram }}"
+        echo master-disksize = "${{ github.event.inputs.cluster_name }}"
+        echo worker_vm_name = "worker"
+        echo worker-cpu = "${{ github.event.inputs.worker-cpu }}"
+        echo worker-cores-per-socket = "1"
+        echo worker-ram = "${{ github.event.inputs.worker-ram }}"
+        echo worker-disksize = "${{ github.event.inputs.worker-disksize }}"

@@ -1,0 +1,28 @@
+name: Context
+on: [pull_request]
+
+jobs:
+  functions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check boolean
+        run: echo ${{ contains( 'hello' , 'll' ) }}
+  one:
+    runs-on: ubuntu-latest
+    needs: ["functions"]
+    if: github.event_name == 'push'
+    steps:
+    - name: Dump Github Context 
+      env: 
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: echo "$GITHUB_CONTEXT"
+    - name: Before failure
+      run: echo "Before Failure"
+    - name: Failure
+      run: echo "failure"
+    - name: After Failure
+    #  if: failure()
+      run: echo "After failure"
+    - name: Always
+      if: always()
+      run: echo "$ VIVEK $$"

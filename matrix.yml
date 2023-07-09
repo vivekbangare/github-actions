@@ -1,0 +1,34 @@
+name: Matrix
+on: [ pull_request ]
+jobs:
+  nodeVersion:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node_version: [7]
+        include:
+          - os: ubuntu-latest
+            node_version: 4
+            is_ubuntu_8: "false"
+        exclude: 
+          - os: ubuntu-latest
+            node_version: 7
+          - os: macos-latest
+            node_version: 7
+    runs-on: ${{ matrix.os }}
+    env:
+      IS_UBUNTU_8: ${{ matrix.is_ubuntu_8 }}
+    steps:
+      - name: log node version
+        run: node -v
+      - uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node_version }}
+      - name: log node version
+       # if: IS_UBUNTU_8 == "true"
+        run: |
+          node -v
+          echo $IS_UBUNTU_8 
+
+
+          
